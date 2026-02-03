@@ -142,14 +142,13 @@
 
         /* --- 文章列表 --- */
         .post-card {
+            display: flex;         /* 开启弹性布局 */
+            flex-direction: column;/*以此垂直排列图片和文字 */
+            height: 100%;          /* 占满父容器高度 */
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-            border: var(--glass-border);
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;   /* 圆角 */
+            overflow: hidden;      /* 防止内容溢出圆角 */
+            /* ...保留您原有的阴影和边框样式... */
         }
 
         .post-card:hover {
@@ -158,20 +157,28 @@
         }
 
         .post-img {
-            /* --- 核心限制代码 --- */
-            width: 100%;           /* 宽度：占满父容器（通常是卡片宽度） */
-            height: 200px;         /* 高度：强制固定为 200像素 */
-            /* 如果您想要限制最大宽高，可以用这两个属性 */
-            max-width: 500px;      /* 最大宽度不超过 500px */
-            max-height: 300px;     /* 最大高度不超过 300px */
-            /* --- 关键属性：防变形 --- */
-            object-fit: cover;     /* 让图片裁剪以填满区域，而不是拉伸变形 */
-            /* 其它美化 */
-            border-radius: 10px;   /* 给图片加个圆角 */
+            width: 100%;           /* 宽度填满卡片 */
+            height: 220px;         /* 【关键】强制固定高度，您可以按需改成 200px 或 250px */
+            object-fit: cover;     /* 【关键】智能裁剪，保证图片不变形 */
+            border-bottom: 1px solid rgba(0,0,0,0.05); /* 加一条淡淡的分隔线 */
         }
 
         .post-content {
             padding: 1.5rem;
+            flex: 1;               /* 让文字区域自动填充剩余空间 */
+            display: flex;         
+            flex-direction: column;
+        }
+        
+        .post-content p {
+            flex-grow: 1;          /* 撑开空间，把“阅读全文”按钮推到底部 */
+            margin-bottom: 1rem;
+            /* 限制显示 3 行文字 */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.6;      /* 增加行高，阅读更舒适 */
         }
 
         .post-meta {
@@ -181,9 +188,11 @@
         }
 
         .post-title {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #333;
+            margin-bottom: 0.5rem;
+            /* 限制标题最多显示 1 行，超出的显示省略号 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .read-more {
