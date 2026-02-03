@@ -412,17 +412,20 @@
                 ctx.save();
                 ctx.translate(this.x, this.y);
                 ctx.rotate(this.rotation * Math.PI / 180);
-                ctx.fillStyle = '#ffc0cb';
-                ctx.globalAlpha = 0.7;
+                ctx.fillStyle = '#ffc0cb'; // 樱花粉
+                ctx.globalAlpha = 0.8;     // 透明度
                 ctx.beginPath();
-                // 绘制简单的花瓣形状
-                ctx.moveTo(0, 0);
-                ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size, 0, 0, this.size);
-                ctx.bezierCurveTo(-this.size, 0, -this.size / 2, -this.size / 2, 0, 0);
+                // 绘制五瓣花
+                for(let i = 0; i < 5; i++) {
+                    ctx.rotate(Math.PI * 2 / 5);
+                    ctx.moveTo(0, 0);
+                    // 绘制单个花瓣（椭圆形，不像爱心）
+                    ctx.bezierCurveTo(this.size/2, -this.size/2, this.size, -this.size/4, 0, -this.size);
+                    ctx.bezierCurveTo(-this.size, -this.size/4, -this.size/2, -this.size/2, 0, 0);
+                }
                 ctx.fill();
                 ctx.restore();
             }
-        }
 
         function initPetals() {
             for (let i = 0; i < petalCount; i++) {
