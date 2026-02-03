@@ -3,124 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的二次元小窝</title>
+    <title>我的二次元小窝 | Otaku Blog</title>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        /* --- 全局设置 --- */
-        body, html {
-            margin: 0; padding: 0; height: 100%;
-            font-family: "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
-            overflow: hidden; /* 防止滚动，保持游戏界面感 */
+        :root {
+            --primary-color: #ffb7c5; /* 樱花粉 */
+            --secondary-color: #aed9e0; /* 天空蓝 */
+            --text-color: #555;
+            --bg-color: #f9f9f9;
+            --card-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
         }
 
-        /* --- 背景层 --- */
-        .bg-layer {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* 这里可以换成你的背景图 URL */
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); 
-            /* background-image: url('你的背景图片.jpg'); */
-            background-size: cover; background-position: center; z-index: 1;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'M PLUS Rounded 1c', 'Noto Sans SC', sans-serif;
         }
 
-        /* --- 樱花特效 (纯CSS模拟) --- */
-        .sakura {
-            position: absolute; top: -10px; background: #ffc0cb;
-            border-radius: 100% 0 100% 0; opacity: 0.6;
-            animation: fall linear infinite; z-index: 2;
-        }
-        @keyframes fall {
-            to { transform: translateY(100vh) rotate(720deg); }
-        }
-
-        /* --- UI 布局 --- */
-        .game-ui {
-            position: relative; z-index: 10; width: 100%; height: 100%;
-            display: flex; flex-direction: column; justify-content: space-between;
+        body {
+            background-color: var(--bg-color);
+            /* 这里放一张唯美的二次元背景图 */
+            background-image: url('https://images.unsplash.com/photo-1518055653554-3407949390f7?q=80&w=2574&auto=format&fit=crop'); 
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: var(--text-color);
+            overflow-x: hidden;
+            cursor: url('https://cur.cursors-4u.net/anime/ani-12/ani1153.cur'), auto; /* 自定义光标示例 */
         }
 
-        /* --- 左侧立绘区域 --- */
-        .character-sprite {
-            position: absolute; bottom: 0; left: 10%;
-            width: 400px; height: 80vh;
-            /* 暂时用半透明色块代替，请替换为你的老婆/女儿立绘图 */
-            background-color: rgba(255, 192, 203, 0.2); 
-            /* background-image: url('images/character.png'); */
-            background-size: contain; background-repeat: no-repeat;
-            background-position: bottom center; pointer-events: none;
+        /* --- 🌸 樱花画布 --- */
+        #sakura-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
         }
 
-        /* --- 右上标题 --- */
-        .title-logo {
-            margin-top: 10vh; margin-right: 10%; text-align: right;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        /* --- 导航栏 --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        .title-logo h1 { font-size: 60px; color: #ff69b4; margin: 0; letter-spacing: 5px; }
-        .title-logo p { font-size: 20px; color: #888; margin-top: 10px; }
 
-        /* --- 右侧菜单按钮 --- */
-        .menu-box {
-            position: absolute; right: 10%; top: 40%;
-            display: flex; flex-direction: column; gap: 20px;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
         }
-        .game-btn {
+
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* --- 头部 Hero Section --- */
+        header {
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #444;
+        }
+
+        .typing-effect {
+            border-right: 3px solid var(--primary-color);
+            padding-right: 5px;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        /* --- 主体布局 --- */
+        .container {
+            display: grid;
+            grid-template-columns: 3fr 1fr; /* 左侧文章，右侧侧边栏 */
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        /* --- 文章列表 --- */
+        .post-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .post-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-meta {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .read-more {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: 0.3s;
+        }
+
+        .read-more:hover {
+            background: #ff9eb0;
+            transform: scale(1.05);
+        }
+
+        /* --- 侧边栏 --- */
+        .sidebar-widget {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: var(--glass-border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            object-fit: cover;
+            margin-bottom: 1rem;
+            transition: transform 0.5s;
+        }
+
+        .avatar:hover {
+            transform: rotate(360deg);
+        }
+
+        .tags span {
+            display: inline-block;
+            background: white;
+            padding: 5px 10px;
+            margin: 5px 2px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tags span:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* --- 页脚 --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
             background: rgba(255, 255, 255, 0.8);
-            border: 2px solid #ffb7c5; padding: 15px 60px;
-            font-size: 20px; color: #d63384; text-decoration: none;
-            border-radius: 30px; transition: all 0.3s; text-align: center;
-            font-weight: bold; backdrop-filter: blur(5px);
-        }
-        .game-btn:hover {
-            background: #ffb7c5; color: white;
-            transform: scale(1.05) translateX(-10px);
+            margin-top: 3rem;
         }
 
-        /* --- 底部对话框 --- */
-        .dialogue-box {
-            margin: 20px 10%; margin-bottom: 50px;
-            background: rgba(0, 0, 0, 0.7);
-            border: 2px solid #fff; border-radius: 15px;
-            padding: 20px 30px; color: white; position: relative;
+        /* --- 动画 Keyframes --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .name-tag {
-            position: absolute; top: -20px; left: 20px;
-            background: #ff69b4; color: white; padding: 5px 20px;
-            border-radius: 15px; font-weight: bold; border: 2px solid #fff;
+
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-color) }
         }
-        .cursor {
-            display: inline-block; width: 10px; height: 20px; background: white;
-            animation: blink 1s infinite; vertical-align: middle; margin-left: 5px;
+
+        /* --- 响应式 --- */
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            h1 { font-size: 2rem; }
         }
-        @keyframes blink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
-    <div class="bg-layer"></div>
-    
-    <div class="sakura" style="left: 10%; width: 10px; height: 10px; animation-duration: 8s;"></div>
-    <div class="sakura" style="left: 30%; width: 14px; height: 14px; animation-duration: 12s; animation-delay: 2s;"></div>
-    <div class="sakura" style="left: 70%; width: 8px; height: 8px; animation-duration: 7s; animation-delay: 1s;"></div>
-    <div class="sakura" style="left: 90%; width: 12px; height: 12px; animation-duration: 10s; animation-delay: 3s;"></div>
 
-    <div class="game-ui">
-        <div class="title-logo">
-            <h1>MY BLOG</h1>
-            <p>Welcome to my sweet dream</p>
+    <canvas id="sakura-canvas"></canvas>
+
+    <nav>
+        <a href="#" class="logo"><i class="fas fa-paw"></i> NekoBlog</a>
+        <div class="nav-links">
+            <a href="#"><i class="fas fa-home"></i> 首页</a>
+            <a href="#"><i class="fas fa-book"></i> 文章</a>
+            <a href="#"><i class="fas fa-image"></i> 绘画</a>
+            <a href="#"><i class="fas fa-user"></i> 关于我</a>
         </div>
+    </nav>
 
-        <div class="menu-box">
-            <a href="#" class="game-btn">开始旅程 (Start)</a>
-            <a href="https://github.com/2108906502" target="_blank" class="game-btn">查看代码 (Code)</a>
-            <a href="#" class="game-btn">关于我 (About)</a>
+    <header>
+        <div class="hero-card">
+            <h1>欢迎来到 <span style="color:var(--primary-color)">我的世界</span></h1>
+            <p style="font-size: 1.2rem;">
+                Here is: <span class="typing-effect" id="typing-text"></span>
+            </p>
         </div>
+    </header>
 
-        <div class="dialogue-box">
-            <div class="name-tag">看板娘</div>
-            <div class="dialogue-text">
-                你终于来了呢... <br>
-                这里是我的个人博客，记录着所有的回忆与技术。要进来看看吗？<span class="cursor"></span>
+    <div class="container">
+        <main>
+            <article class="post-card">
+                <img src="https://images.unsplash.com/photo-1541963463532-d68292c34b19?q=80&w=1000&auto=format&fit=crop" class="post-img" alt="Anime Scene">
+                <div class="post-content">
+                    <div class="post-meta"><i class="far fa-calendar-alt"></i> 2023年10月24日 | <i class="fas fa-tag"></i> 动漫推荐</div>
+                    <h2 class="post-title">2023年秋季番剧补番指南：治愈与热血并存</h2>
+                    <p>这个季度的新番质量真的太高了！不管是画面还是剧情，都让人欲罢不能。今天就来聊聊我看过的几部神作...</p>
+                    <a href="#" class="read-more">阅读全文</a>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <img src="https://images.unsplash.com/photo-1613376023733-0a73315d9b06?q=80&w=1000&auto=format&fit=crop" class="post-img" alt="Japan Scenery">
+                <div class="post-content">
+                    <div class="post-meta"><i class="far fa-calendar-alt"></i> 2023年10月20日 | <i class="fas fa-tag"></i> 日本旅行</div>
+                    <h2 class="post-title">京都巡礼：寻找动画里的现实场景</h2>
+                    <p>走在京都的街道上，仿佛穿越到了《轻音少女》的世界。每一次快门，都是一张精美的壁纸...</p>
+                    <a href="#" class="read-more">阅读全文</a>
+                </div>
+            </article>
+        </main>
+
+        <aside>
+            <div class="sidebar-widget">
+                <img src="https://ui-avatars.com/api/?name=Neko&background=ffb7c5&color=fff&size=150" alt="Avatar" class="avatar">
+                <h3>某二次元博主</h3>
+                <p style="margin: 10px 0; font-size: 0.9rem; color: #666;">
+                    喜爱番剧、游戏和代码。<br>
+                    梦想是开发自己的Galgame。
+                </p>
+                <div style="margin-top: 15px;">
+                    <a href="#" style="color:#555; margin: 0 10px;"><i class="fab fa-github fa-lg"></i></a>
+                    <a href="#" style="color:#1DA1F2; margin: 0 10px;"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" style="color:#7289DA; margin: 0 10px;"><i class="fab fa-discord fa-lg"></i></a>
+                </div>
             </div>
-        </div>
-        
-        <div class="character-sprite"></div>
+
+            <div class="sidebar-widget">
+                <h4 style="margin-bottom: 1rem; color:var(--primary-color);">🏷️ 热门标签</h4>
+                <div class="tags">
+                    <span>#二次元</span>
+                    <span>#前端开发</span>
+                    <span>#原神</span>
+                    <span>#生活记录</span>
+                    <span>#绘画</span>
+                    <span>#Cosplay</span>
+                </div>
+            </div>
+            
+            <div class="sidebar-widget">
+                 <h4 style="margin-bottom: 1rem;">🎵 正在播放</h4>
+                 <div style="background:#eee; height: 40px; border-radius: 20px; line-height: 40px;">
+                     Secret Base - 未闻花名
+                 </div>
+            </div>
+        </aside>
     </div>
+
+    <footer>
+        <p>Copyright © 2023 NekoBlog. Made with <i class="fas fa-heart" style="color: var(--primary-color);"></i> by You.</p>
+    </footer>
+
+    <script>
+        // --- 1. 打字机效果 ---
+        const textElement = document.getElementById('typing-text');
+        const texts = ["Otaku's Paradise.", "Code & Anime.", "Dreaming..."];
+        let count = 0;
+        let index = 0;
+        let currentText = "";
+        let letter = "";
+
+        (function type() {
+            if (count === texts.length) {
+                count = 0;
+            }
+            currentText = texts[count];
+            letter = currentText.slice(0, ++index);
+            
+            textElement.textContent = letter;
+            if (letter.length === currentText.length) {
+                setTimeout(() => {
+                    // 简单的回删逻辑省略，直接切换
+                    count++;
+                    index = 0;
+                }, 2000);
+            }
+            setTimeout(type, 150);
+        })();
+
+        // --- 2. 简易樱花下落特效 (Canvas) ---
+        const canvas = document.getElementById('sakura-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const petals = [];
+        const petalCount = 50; // 花瓣数量
+
+        class Petal {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height - canvas.height;
+                this.size = Math.random() * 15 + 10;
+                this.speedY = Math.random() * 1 + 0.5;
+                this.speedX = Math.random() * 2 - 1;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 2 - 1;
+            }
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+                if (this.y > canvas.height) {
+                    this.y = -20;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = '#ffc0cb';
+                ctx.globalAlpha = 0.7;
+                ctx.beginPath();
+                // 绘制简单的花瓣形状
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(this.size / 2, -this.size / 2, this.size, 0, 0, this.size);
+                ctx.bezierCurveTo(-this.size, 0, -this.size / 2, -this.size / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initPetals() {
+            for (let i = 0; i < petalCount; i++) {
+                petals.push(new Petal());
+            }
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(petal => {
+                petal.update();
+                petal.draw();
+            });
+            requestAnimationFrame(animatePetals);
+        }
+
+        initPetals();
+        animatePetals();
+
+        // 窗口大小改变时重置Canvas
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
 </body>
 </html>
