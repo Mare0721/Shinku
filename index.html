@@ -273,8 +273,10 @@
     </style>
 </head>
 <body>
-    <div>//横幅广告
+    <script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js">//广告库</script>
+    <div>
         <script type="text/javascript">
+            //横幅广告
             aclib.runBanner({
                 zoneId: '10942362',
             });
@@ -294,7 +296,8 @@
         </div>
     </nav>
 
-    <script type="text/javascript">//页面内推送广告
+    <script type="text/javascript">
+        //页面内推送广告
         aclib.runInPagePush({
             zoneId: '10942354',
             maxAds: 2,
@@ -556,6 +559,5 @@
         init();
     })();
 </script>
-<script id="aclib" type="text/javascript" src="//acscdn.com/script/aclib.js"></script>
 </body>
 </html>
